@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000/api/auth";
+const BASE_URL = "https://genui-9lkq.onrender.com/api/auth";
 
 export const authService = {
 
@@ -30,7 +30,6 @@ export const authService = {
 
   logout: () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("tokenTime");
     window.location.href = "/login";
   }
 };
