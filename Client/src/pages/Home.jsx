@@ -98,43 +98,58 @@ const Home = () => {
 
   setLoading(true);
 
-  try {
-    const modelToUse = settings.model || "gemini-2.0-flash";
-    const response = await ai.models.generateContent({
-      
-      model: modelToUse,
-      contents: [
-        {
-          role: "user",
-          parts: [
-            {
-              text: `
-                Generate a UI component for: ${prompt}
-                Framework: ${frameWork.value}
-                Font: ${settings.font}
-                Layout: ${settings.layout}
+    try {
+  const modelToUse = settings.model || "gemini-2.0-flash";
 
-                Return ONLY the code in fenced markdown format.
-              `
-            }
-          ]
-        }
-      ]
-    });
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: `
+                  Generate a UI component for: ${prompt}
+                  Framework: ${frameWork.value}
+                  Font: ${settings.font}
+                  Layout: ${settings.layout}
 
-    const text =
-      response.response.candidates[0].content.parts[0].text || "";
+                  Return ONLY the code in fenced markdown format.
+                `
+              }
+            ]
+          }
+        ]
+      })
+    }
+  );
 
-    setCode(extractCode(text));
-    setOutputScreen(true);
+  const data = await res.json();
 
-  } catch (error) {
-    console.error(error);
-    toast.error("AI Error — try again");
-  } finally {
-    setLoading(false);
+  // If API returns an error
+  if (data.error) {
+    throw new Error(data.error.message);
   }
+
+  const text =
+    data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+  if (!text) {
+    throw new Error("Empty AI response");
   }
+
+  setCode(extractCode(text));
+  setOutputScreen(true);
+
+    } catch (error) {
+      console.error("AI Error:", error);
+      toast.error(error.message || "AI failed to generate output.");
+    }
+
 
   const copyCode = async () => {
     if (!code.trim()) return toast.error("No code to copy");
