@@ -15,6 +15,11 @@ app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
 // const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://localhost:27017/GenUI";
+app.use(cors({
+  origin: ["http://localhost:5173", "gen-mxm2j5hca-rudra-pandyas-projects.vercel.app"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
 mongoose.set('strictQuery', false);
 
