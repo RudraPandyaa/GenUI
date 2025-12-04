@@ -14,11 +14,21 @@ app.use(cors());
 // Serve the uploaded images statically so frontend can display them
 app.use('/uploads', express.static('uploads'));
 
-// Database Connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
+const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://localhost:27017/GenUI";
 
+mongoose.set('strictQuery', false);
+
+mongoose.connect(mongoUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 10000, // 10s
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => {
+  console.error('MongoDB connection error:', err.message);
+  // Optional: exit to trigger Render restart failure (helps spotting env problems)
+  // process.exit(1);
+});
 // Routes
 app.use('/api/auth', authRoutes);
 
