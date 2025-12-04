@@ -12,7 +12,17 @@ const SettingsContext = createContext();
 export const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState(() => {
     const saved = localStorage.getItem('genui-settings');
-    return saved ? JSON.parse(saved) : defaultSettings;
+    const parsed = saved ? JSON.parse(saved) : defaultSettings;
+
+  // Allowed free-tier models
+    const validModels = ['gemini-2.0-flash'];
+
+  // If stored model is invalid, fix it automatically
+    if (!validModels.includes(parsed.model)) {
+      parsed.model = 'gemini-2.0-flash';
+    }
+
+    return parsed;
   });
 
   useEffect(() => {

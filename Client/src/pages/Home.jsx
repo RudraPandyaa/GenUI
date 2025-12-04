@@ -99,8 +99,10 @@ const Home = () => {
   setLoading(true);
 
   try {
+    const modelToUse = settings.model || "gemini-2.0-flash";
     const response = await ai.models.generateContent({
-      model: settings.model,
+      
+      model: modelToUse,
       contents: [
         {
           role: "user",
