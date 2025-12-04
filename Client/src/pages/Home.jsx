@@ -222,7 +222,7 @@ const Home = () => {
           </h3>
 
           <p className="text-gray-500 dark:text-gray-400 mt-2">
-            Powered by {settings.model === "gemini-3-pro-preview" ? "Gemini Pro" : "Gemini Flash"}
+            Powered by Gemini Flash
           </p>
 
           <p className="text-[15px] font-[600] mt-6 dark:text-white">Framework</p>

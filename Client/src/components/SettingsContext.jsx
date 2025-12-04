@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 // Default settings
 const defaultSettings = {
-  model: 'gemini-2.5-flash',
+  model: 'gemini-2.0-flash',
   font: 'Inter',
   layout: 'Default',
 };

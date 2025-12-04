@@ -68,17 +68,22 @@ const SettingsModal = ({ isOpen, onClose }) => {
               <div className="space-y-6">
 
                 {/* AI Model */}
-                <div className="space-y-3">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">AI Model</label>
-                  <select
-                    value={settings.model}
-                    onChange={(e) => updateSetting('model', e.target.value)}
-                    className="w-full p-3 rounded-xl bg-gray-50 dark:bg-[#09090B] border border-gray-200 dark:border-[#333] text-black dark:text-white outline-none focus:border-purple-500 transition-colors cursor-pointer"
-                  >
-                    <option value="gemini-2.5-flash">Gemini Flash (Fastest)</option>
-                    <option value="gemini-3-pro-preview">Gemini Pro (Smartest)</option>
-                  </select>
-                </div>
+                <select
+                  value={settings.model}
+                  onChange={(e) => updateSetting("model", e.target.value)}
+                  className="w-full p-3 rounded-xl bg-gray-50 dark:bg-[#09090B]"
+                >
+                  <option value="gemini-2.0-flash">Gemini Flash (Fastest)</option>
+                </select>
+
+                
+                {/* <select
+                value={settings.model}
+                onChange={(e) => updateSetting('model', e.target.value)}
+              >
+                <option value="gemini-2.5-flash">Gemini Flash (Fastest)</option>
+              </select> */}
+
 
                 <div className="h-px bg-gray-100 dark:bg-gray-800 my-2"></div>
 
