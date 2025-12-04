@@ -14,11 +14,11 @@ app.use(cors());
 // Serve the uploaded images statically so frontend can display them
 app.use('/uploads', express.static('uploads'));
 
-const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://localhost:27017/GenUI";
+// const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://localhost:27017/GenUI";
 
 mongoose.set('strictQuery', false);
 
-mongoose.connect(mongoUri, {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 10000, // 10s
