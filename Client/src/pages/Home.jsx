@@ -116,8 +116,8 @@ const Home = () => {
       const text = response.text || "";
       setCode(extractCode(text));
       setOutputScreen(true);
-    } catch (err) {
-      console.err(err)
+    } catch (error) {
+      console.error(error)
       toast.error("AI Error — try again");
     } finally {
       setLoading(false);
