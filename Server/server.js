@@ -10,7 +10,6 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
 // Serve the uploaded images statically so frontend can display them
 app.use('/uploads', express.static('uploads'));
 
@@ -23,17 +22,10 @@ app.use(cors({
 
 mongoose.set('strictQuery', false);
 
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 10000, // 10s
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => {
-  console.error('MongoDB connection error:', err.message);
-  // Optional: exit to trigger Render restart failure (helps spotting env problems)
-  // process.exit(1);
-});
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.error("MongoDB connection error:", err));
+
 // Routes
 app.use('/api/auth', authRoutes);
 
