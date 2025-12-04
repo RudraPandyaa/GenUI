@@ -93,35 +93,45 @@ const Home = () => {
   }
 
   async function getResponse() {
-    if (!prompt.trim()) return toast.error("Please enter a prompt");
-    if (!API_KEY) return toast.error("API Key is missing");
+  if (!prompt.trim()) return toast.error("Please enter a prompt");
+  if (!API_KEY) return toast.error("API Key is missing");
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const response = await ai.models.generateContent({
-        model: settings.model, // NEW FEATURE
-        contents: `
-          Generate a UI component for: ${prompt}
-          Framework: ${frameWork.value}
+  try {
+    const response = await ai.models.generateContent({
+      model: settings.model,
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `
+                Generate a UI component for: ${prompt}
+                Framework: ${frameWork.value}
+                Font: ${settings.font}
+                Layout: ${settings.layout}
 
-          Use:
-          - Font: ${settings.font}
-          - Layout: ${settings.layout}
+                Return ONLY the code in fenced markdown format.
+              `
+            }
+          ]
+        }
+      ]
+    });
 
-          Return ONLY the code in fenced markdown format.
-        `,
-      });
+    const text =
+      response.response.candidates[0].content.parts[0].text || "";
 
-      const text = response.text || "";
-      setCode(extractCode(text));
-      setOutputScreen(true);
-    } catch (error) {
-      console.error(error)
-      toast.error("AI Error — try again");
-    } finally {
-      setLoading(false);
-    }
+    setCode(extractCode(text));
+    setOutputScreen(true);
+
+  } catch (error) {
+    console.error(error);
+    toast.error("AI Error — try again");
+  } finally {
+    setLoading(false);
+  }
   }
 
   const copyCode = async () => {
