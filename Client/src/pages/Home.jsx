@@ -8,7 +8,7 @@ import { IoCloseSharp, IoCopy } from "react-icons/io5";
 import { PiExportBold } from "react-icons/pi";
 import { ImNewTab } from "react-icons/im";
 import { FiRefreshCcw } from "react-icons/fi";
-import { GoogleGenAI } from "@google/genai";
+// import { GoogleGenAI } from "@google/genai";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { authService  } from '../services/auth.js'
@@ -83,9 +83,9 @@ const Home = () => {
 
   const API_KEY = import.meta.env.VITE_API_KEY;
 
-  const ai = new GoogleGenAI({
-    apiKey: API_KEY,
-  });
+  // const ai = new GoogleGenAI({
+  //   apiKey: API_KEY,
+  // });
 
   function extractCode(response) {
     const match = response.match(/(?:\w+)?\n?([\s\S]*?)/);
@@ -102,7 +102,7 @@ const Home = () => {
   const modelToUse = settings.model || "gemini-2.0-flash";
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${API_KEY}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -376,5 +376,5 @@ const Home = () => {
     </div>
   );
 };
-
+}
 export default Home;
