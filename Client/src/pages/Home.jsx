@@ -149,7 +149,7 @@ const Home = () => {
       console.error("AI Error:", error);
       toast.error(error.message || "AI failed to generate output.");
     }
-
+  }
 
   const copyCode = async () => {
     if (!code.trim()) return toast.error("No code to copy");
@@ -375,6 +375,6 @@ const Home = () => {
       )}
     </div>
   );
-};
 }
+
 export default Home;
