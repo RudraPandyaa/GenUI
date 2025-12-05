@@ -5,7 +5,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; connect-src 'self' https://genui-9lkq.onrender.com https://generativelanguage.googleapis.com https://gen-ui-omega-smoky.vercel.app; img-src * data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; frame-src 'self' blob: data:;"
+          "value": "default-src 'self'; connect-src 'self' https://genui-9lkq.onrender.com https://generativelanguage.googleapis.com https://gen-ui-omega-smoky.vercel.app https://cdn.jsdelivr.net; img-src * data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; worker-src 'self' blob: https://cdn.jsdelivr.net; frame-src 'self' blob: data:;"
         }
       ]
     }
