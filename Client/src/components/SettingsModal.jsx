@@ -73,7 +73,11 @@ const SettingsModal = ({ isOpen, onClose }) => {
                   onChange={(e) => updateSetting("model", e.target.value)}
                   className="w-full p-3 rounded-xl bg-gray-50 dark:bg-[#09090B]"
                 >
-                  <option value="gemini-2.0-flash">Gemini Flash (Fastest)</option>
+                  <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended)</option>
+                  <option value="gemini-2.5-pro">Gemini 2.5 Pro (High Quality)</option>
+                  <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                  <option value="gemini-flash-latest">Gemini Flash Latest</option>
+                  <option value="gemini-pro-latest">Gemini Pro Latest</option>
                 </select>
 
                 
@@ -192,7 +196,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 <div className="w-full max-w-xs space-y-3 pt-6">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Version</span>
-                    <span className="text-black dark:text-white font-medium">1.2.0</span>
+                    <span className="text-black dark:text-white font-medium">1.1.0</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Creator</span>

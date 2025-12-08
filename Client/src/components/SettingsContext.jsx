@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 // Default settings
 const defaultSettings = {
-  model: 'gemini-2.0-flash',
+  model: 'gemini-2.5-flash',
   font: 'Inter',
   layout: 'Default',
 };
@@ -15,11 +15,17 @@ export const SettingsProvider = ({ children }) => {
     const parsed = saved ? JSON.parse(saved) : defaultSettings;
 
   // Allowed free-tier models
-    const validModels = ['gemini-2.0-flash'];
+  const validModels = [
+    "gemini-2.5-flash",
+    "gemini-2.5-pro",
+    "gemini-2.0-flash",
+    "gemini-flash-latest",
+    "gemini-pro-latest"
+  ];
 
   // If stored model is invalid, fix it automatically
     if (!validModels.includes(parsed.model)) {
-      parsed.model = 'gemini-2.0-flash';
+      parsed.model = 'gemini-2.5-flash';
     }
 
     return parsed;

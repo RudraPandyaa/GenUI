@@ -11,7 +11,6 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
-
   // const handleLogout = () => {
   // localStorage.removeItem("token");
   //   navigate("/login");
