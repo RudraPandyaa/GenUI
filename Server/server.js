@@ -33,7 +33,7 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
-app.options("*", cors());
+app.options("/*", cors());
 app.use('/uploads', express.static('uploads'));
 mongoose.set('strictQuery', false);
 
