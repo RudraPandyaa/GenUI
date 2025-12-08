@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
     const savedUser = await user.save();
 
     // Generate Token immediately so they can upload profile pic
-    const token = jwt.sign({ _id: savedUser._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: savedUser._id }, process.env.JWT_SECRET,  { expiresIn: "8h" });
 
     res.json({ 
       success: true,
@@ -101,7 +101,8 @@ router.post('/login', async (req, res) => {
       user: {
         username: user.username,
         email: user.email,
-        profilePic: user.profilePic
+        profilePic: user.profilePic,
+        isProfileComplete: user.isProfileComplete
       }
     });
 

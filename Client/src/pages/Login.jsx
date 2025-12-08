@@ -6,6 +6,7 @@ import { authService } from '../services/auth';
 import { ClipLoader } from 'react-spinners';
 
 const Login = () => {
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -31,11 +32,22 @@ const Login = () => {
 
       if (response.token) {
         localStorage.setItem("token", response.token);
-        toast.success(response.message);
-        navigate("/");
-      } else {
-        toast.error(response.message);
+        localStorage.setItem("tokenTime", Date.now());
+
+        // ✅ THIS WAS MISSING
+        localStorage.setItem(
+          "profileComplete",
+          response.user?.isProfileComplete
+        );
+
+        if (!response.user?.isProfileComplete) {
+          navigate("/setup-profile");
+        } else {
+          navigate("/");
+        }
       }
+
+
 
     } catch (error) {
       toast.error(error.message || "Something went wrong");

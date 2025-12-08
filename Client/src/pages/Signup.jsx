@@ -29,13 +29,22 @@ const Signup = () => {
     setLoading(true);
     try {
       const response = await authService.signup(
-      formData.username,
-      formData.email,
-      formData.password
+        formData.username,
+        formData.email,
+        formData.password
       );
 
-      toast.success(response.message);
-      navigate("/login");
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("tokenTime", Date.now());
+        localStorage.setItem(
+          "profileComplete",
+          String(response.isProfileComplete)
+        );
+
+        navigate("/setup-profile");
+      }
+
 
     } catch (error) {
       toast.error("An error occurred during signup");

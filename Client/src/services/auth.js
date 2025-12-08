@@ -1,4 +1,5 @@
 const BASE_URL = "https://genui-9lkq.onrender.com/api/auth";
+// const BASE_URL = "http://localhost:5000/api/auth";
 
 export const authService = {
 
@@ -8,8 +9,17 @@ export const authService = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password })
     });
-    return await res.json();
+
+    const data = await res.json();
+
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("tokenTime", Date.now());
+    }
+
+    return data;
   },
+
 
   login: async (email, password) => {
     const res = await fetch(`${BASE_URL}/login`, {

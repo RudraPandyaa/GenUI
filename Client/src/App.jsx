@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup.jsx";
 import ForgotPassword from "./pages/ForgotPassword";
 import NoPage from "./pages/NoPage";
+import SetupProfile from "./pages/SetupProfile";
 
 import { SettingsProvider } from "./components/SettingsContext.jsx";
 
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/setup-profile" element={<SetupProfile />} />
 
           {/* 404 Page */}
           <Route path="*" element={<NoPage />} />

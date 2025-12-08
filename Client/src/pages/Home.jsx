@@ -45,6 +45,20 @@ const Home = () => {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const profileDone = localStorage.getItem("profileComplete");
+
+    if (profileDone !== "true") {
+      navigate("/setup-profile");
+    }
+  }, []);
+
+
+
+  // if (userProfileDone === "false") {
+  //   navigate("/setup-profile");
+  // }
+
   // =========================================================
   //                     AUTH CHECK
   // =========================================================

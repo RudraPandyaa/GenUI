@@ -34,15 +34,22 @@ const transporter = nodemailer.createTransport({
 
 // Middleware to verify Token
 const verifyToken = (req, res, next) => {
-  const token = req.header('Authorization');
-  if (!token) return res.status(401).json({ message: 'Access Denied' });
+  const authHeader = req.header("Authorization");
+
+  if (!authHeader) {
+    return res.status(401).json({ message: "Access Denied" });
+  }
+
+  const token = authHeader.startsWith("Bearer ")
+    ? authHeader.split(" ")[1]
+    : authHeader;
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified;
     next();
-  }catch (err) {
-    return res.status(401).json({ message: 'Token Expired or Invalid' });
+  } catch (err) {
+    return res.status(401).json({ message: "Token Invalid or Expired" });
   }
 };
 
