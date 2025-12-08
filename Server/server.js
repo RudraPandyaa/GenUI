@@ -10,16 +10,31 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-// Serve the uploaded images statically so frontend can display them
-app.use('/uploads', express.static('uploads'));
 
 // const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://localhost:27017/GenUI";
 app.use(cors({
-  origin: ["http://localhost:5173", "https://gen-ui-omega-smoky.vercel.app"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      "http://localhost:5173",
+      "https://genn-ui.netlify.app",
+      "https://gen-ui-omega-smoky.vercel.app"
+    ];
 
+    // allow requests with no origin (like Postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+app.options("*", cors());
+app.use('/uploads', express.static('uploads'));
 mongoose.set('strictQuery', false);
 
 mongoose.connect(process.env.MONGODB_URI)
