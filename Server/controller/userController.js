@@ -3,7 +3,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const { upload,transporter,verifyToken } = require('../middleware/userAuth')
+const { upload,transporter,sendOtpEmail,verifyToken  } = require('../middleware/userAuth')
 // 1. REGISTER
 router.post('/register', async (req, res) => {
   try {
@@ -112,41 +112,61 @@ router.post('/login', async (req, res) => {
 });
 
 // 5. FORGOT PASSWORD (Send OTP)
-router.post('/forgot-password', async (req, res) => {
+// router.post('/forgot-password', async (req, res) => {
+//   try {
+//     const { email } = req.body;
+//     const user = await User.findOne({ email });
+//     if (!user) return res.status(404).json({ message: 'User not found' });
+
+//     // Generate 6 digit OTP
+//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+//     // Set OTP and Expiry (10 minutes)
+//     user.otp = otp;
+//     user.otpExpires = Date.now() + 10 * 60 * 1000;
+//     await user.save();
+
+//     // Send Email
+//     const mailOptions = {
+//       from: process.env.EMAIL_USER,
+//       to: email,
+//       subject: 'Password Reset OTP',
+//       text: `Your OTP for password reset is: ${otp}`
+//     };
+//     // console.log("USER:", process.env.EMAIL_USER);
+//     // console.log("PASS:", process.env.EMAIL_PASS);
+
+//     transporter.sendMail(mailOptions, (error, info) => {
+//       if (error) {
+//         console.log(error);
+//         return res.status(500).json({ message: 'Error sending email' });
+//       } else {
+//         res.json({ message: 'OTP sent to email' });
+//       }
+//     });
+
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// });
+
+router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Generate 6 digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    
-    // Set OTP and Expiry (10 minutes)
     user.otp = otp;
     user.otpExpires = Date.now() + 10 * 60 * 1000;
     await user.save();
 
-    // Send Email
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Password Reset OTP',
-      text: `Your OTP for password reset is: ${otp}`
-    };
-    // console.log("USER:", process.env.EMAIL_USER);
-    // console.log("PASS:", process.env.EMAIL_PASS);
+    await sendOtpEmail(email, otp);
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).json({ message: 'Error sending email' });
-      } else {
-        res.json({ message: 'OTP sent to email' });
-      }
-    });
-
+    res.json({ message: "OTP sent to email" });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("EMAIL ERROR:", err.message);
+    res.status(500).json({ message: "Failed to send OTP" });
   }
 });
 
