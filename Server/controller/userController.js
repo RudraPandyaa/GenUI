@@ -133,8 +133,8 @@ router.post('/forgot-password', async (req, res) => {
       subject: 'Password Reset OTP',
       text: `Your OTP for password reset is: ${otp}`
     };
-    console.log("USER:", process.env.EMAIL_USER);
-    console.log("PASS:", process.env.EMAIL_PASS);
+    // console.log("USER:", process.env.EMAIL_USER);
+    // console.log("PASS:", process.env.EMAIL_PASS);
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {

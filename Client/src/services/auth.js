@@ -20,7 +20,24 @@ export const authService = {
     return data;
   },
 
+   sendOtp: async (email) => {
+    const res = await fetch(`${BASE_URL}/forgot-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    });
+    return res.json();
+  },
 
+  // ✅ ADD THIS
+  verifyOtpAndResetPassword: async (email, otp, newPassword) => {
+    const res = await fetch(`${BASE_URL}/reset-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp, newPassword })
+    });
+    return res.json();
+  },
   login: async (email, password) => {
     const res = await fetch(`${BASE_URL}/login`, {
       method: "POST",
