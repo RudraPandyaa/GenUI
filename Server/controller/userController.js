@@ -45,23 +45,33 @@ router.post('/register', async (req, res) => {
 });
 
 // 2. UPLOAD PROFILE PIC (Post-Registration Step)
-router.post('/upload-profile-pic', verifyToken, upload.single('profilePic'), async (req, res) => {
-  try {
-    if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+router.post(
+  "/upload-profile-pic",
+  verifyToken,
+  upload.single("profilePic"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No image uploaded" });
+      }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+      // Cloudinary gives direct URL
+      const imageUrl = req.file.path;
 
-    // Update user: set image and set profile as complete
-    await User.findByIdAndUpdate(req.user._id, {
-      profilePic: imageUrl,
-      isProfileComplete: true
-    });
+      await User.findByIdAndUpdate(req.user._id, {
+        profilePic: imageUrl,
+        isProfileComplete: true,
+      });
 
-    res.json({ message: 'Profile picture updated', imageUrl });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+      res.json({
+        message: "Profile picture updated",
+        imageUrl,
+      });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
   }
-});
+);
 
 // 3. SKIP PROFILE PIC (Optional: If user clicks "Skip")
 router.post('/skip-profile-pic', verifyToken, async (req, res) => {
