@@ -3,7 +3,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const { upload,transporter,sendOtpEmail,verifyToken  } = require('../middleware/userAuth')
+const { transporter,sendOtpEmail,verifyToken  } = require('../middleware/userAuth')
+const upload = require("../middleware/upload")
 // 1. REGISTER
 router.post('/register', async (req, res) => {
   try {
@@ -51,11 +52,14 @@ router.post(
   upload.single("profilePic"),
   async (req, res) => {
     try {
+      console.log("UPLOAD HIT");
+      console.log("req.file:", req.file);
+
       if (!req.file) {
         return res.status(400).json({ message: "No image uploaded" });
       }
 
-      // Cloudinary gives direct URL
+      // Cloudinary gives URL here
       const imageUrl = req.file.path;
 
       await User.findByIdAndUpdate(req.user._id, {
@@ -63,11 +67,14 @@ router.post(
         isProfileComplete: true,
       });
 
+      console.log("CLOUDINARY URL:", imageUrl);
+
       res.json({
         message: "Profile picture updated",
         imageUrl,
       });
     } catch (err) {
+      console.error("UPLOAD ERROR:", err);
       res.status(500).json({ message: err.message });
     }
   }

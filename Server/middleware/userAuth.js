@@ -6,15 +6,15 @@ const path = require("path");
 const axios = require("axios");
 
 // -------------------- MULTER --------------------
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-const upload = multer({ storage });
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "uploads/");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + path.extname(file.originalname));
+//   },
+// });
+// const upload = multer({ storage });
 
 // -------------------- NODEMAILER --------------------
 // const transporter = nodemailer.createTransport({
@@ -74,7 +74,7 @@ const verifyToken = (req, res, next) => {
 };
 
 module.exports = {
-  upload,
+  // upload,
   // transporter,
   verifyToken,
   sendOtpEmail
