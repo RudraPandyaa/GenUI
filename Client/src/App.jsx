@@ -8,6 +8,8 @@ import Signup from "./pages/Signup.jsx";
 import ForgotPassword from "./pages/ForgotPassword";
 import NoPage from "./pages/NoPage";
 import SetupProfile from "./pages/SetupProfile";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { SettingsProvider } from "./components/SettingsContext.jsx";
 
@@ -15,6 +17,16 @@ const App = () => {
   return (
     <SettingsProvider>
       <BrowserRouter>
+            <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          pauseOnFocusLoss={false}
+          pauseOnHover={true}
+          theme="colored"
+        />
         <Routes>
 
           {/* Main Pages */}

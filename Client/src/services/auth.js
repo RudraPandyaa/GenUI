@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 const BASE_URL = "https://genui-9lkq.onrender.com/api/auth";
 // const BASE_URL = "http://localhost:5000/api/auth";
 
@@ -12,22 +14,29 @@ export const authService = {
 
     const data = await res.json();
 
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("tokenTime", Date.now());
+    if (!res.ok) {
+      throw new Error(data.message || "Signup failed");
     }
 
     return data;
   },
 
-   sendOtp: async (email) => {
+  sendOtp: async (email) => {
     const res = await fetch(`${BASE_URL}/forgot-password`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
     });
-    return res.json();
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "OTP failed");
+    }
+
+    return data;
   },
+
 
   // ✅ ADD THIS
   verifyOtpAndResetPassword: async (email, otp, newPassword) => {
@@ -47,16 +56,17 @@ export const authService = {
 
     const data = await res.json();
 
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("tokenTime", Date.now());
+    if (!res.ok) {
+      throw new Error(data.message || "Login failed");
     }
 
     return data;
   },
 
+
   logout: () => {
     localStorage.removeItem("token");
+    toast.success("Logged out successfully");
     window.location.href = "/login";
   }
 };

@@ -39,17 +39,12 @@ const Signup = () => {
       if (response.token) {
         localStorage.setItem("token", response.token);
         localStorage.setItem("tokenTime", Date.now());
-        localStorage.setItem(
-          "profileComplete",
-          String(response.isProfileComplete)
-        );
-
+        localStorage.setItem("profileComplete", response.isProfileComplete);
+        toast.success("Account created successfully");
         navigate("/setup-profile");
       }
-
-
     } catch (error) {
-      toast.error("An error occurred during signup");
+        toast.error(error.message || "Signup failed");
     } finally {
       setLoading(false);
     }

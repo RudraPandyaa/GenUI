@@ -44,6 +44,11 @@ const SetupProfile = () => {
       if (!res.ok) throw new Error(data.message);
 
       localStorage.setItem("profileComplete", "true");
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      user.profilePic = data.imageUrl;
+      user.isProfileComplete = true;
+
+      localStorage.setItem("user", JSON.stringify(user));
       toast.success("Profile updated");
       navigate("/");
     } catch (err) {
@@ -54,12 +59,26 @@ const SetupProfile = () => {
   };
 
   const skipProfile = async () => {
-    await fetch(`${BASE_URL}/skip-profile-pic`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    localStorage.setItem("profileComplete", "true");
-    navigate("/");
+    try {
+      const res = await fetch(`${BASE_URL}/skip-profile-pic`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message);
+        return;
+      }
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("profileComplete", "true");
+
+        toast.success("Profile setup skipped");
+        navigate("/");
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
   };
 
   return (
@@ -76,7 +95,7 @@ const SetupProfile = () => {
               preview ||
               "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
             }
-            alt="avatar"
+            // alt="avatar"
             className="w-full h-full object-cover"
           />
 

@@ -35,13 +35,11 @@ const Login = () => {
       if (response.token) {
         localStorage.setItem("token", response.token);
         localStorage.setItem("tokenTime", Date.now());
+        localStorage.setItem("profileComplete", response.user?.isProfileComplete);
 
-        // ✅ THIS WAS MISSING
-        localStorage.setItem(
-          "profileComplete",
-          response.user?.isProfileComplete
-        );
-
+        // ✅ REQUIRED FOR NAVBAR (avatar + initials)
+        localStorage.setItem("user", JSON.stringify(response.user));
+        toast.success("Logged in successfully");
         if (!response.user?.isProfileComplete) {
           navigate("/setup-profile");
         } else {
@@ -50,9 +48,8 @@ const Login = () => {
       }
 
 
-
     } catch (error) {
-      toast.error(error.message || "Something went wrong");
+      toast.error(error.message || "Login failed")
     } finally {
       setLoading(false);
     }

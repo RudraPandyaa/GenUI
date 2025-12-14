@@ -6,44 +6,87 @@ const bcrypt = require('bcryptjs');
 const { transporter,sendOtpEmail,verifyToken  } = require('../middleware/userAuth')
 const upload = require("../middleware/upload")
 // 1. REGISTER
-router.post('/register', async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // Check if user exists
-    const emailExist = await User.findOne({ email });
-    if (emailExist) return res.status(400).json({ message: 'Email already exists' });
+    // 1. Basic validation
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    const normalizedUsername = username.trim().toLowerCase();
+    const normalizedEmail = email.trim().toLowerCase();
 
-    // Hash password
+    // 2. Username duplicate check
+    const usernameExists = await User.findOne({ username:normalizedUsername });
+    if (usernameExists) {
+      return res.status(409).json({ message: "Username must be unique" });
+    }
+
+    // 3. Email duplicate check
+    const emailExists = await User.findOne({ email:normalizedEmail });
+    if (emailExists) {
+      return res.status(409).json({ message: "Email already exists" });
+    }
+
+    // 4. Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
+    // 5. Create user
     const user = new User({
-      username,
-      email,
+      username: normalizedUsername,
+      email: normalizedEmail,
       password: hashedPassword,
-      isProfileComplete: false // Default is false
+      isProfileComplete: false,
     });
 
     const savedUser = await user.save();
 
-    // Generate Token immediately so they can upload profile pic
-    const token = jwt.sign({ _id: savedUser._id }, process.env.JWT_SECRET,  { expiresIn: "8h" });
+    // 6. Generate token
+    const token = jwt.sign(
+      { _id: savedUser._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "8h" }
+    );
 
-    res.json({ 
+    // 7. Response
+    res.status(201).json({
       success: true,
-      message: 'Registered successfully', 
-      token, 
-      userId: savedUser._id,
-      // Frontend checks this. If true, show dashboard. If false, show Upload Profile Pic page.
-      isProfileComplete: savedUser.isProfileComplete 
+      message: "Registered successfully",
+      token,
+      user: {
+        _id: savedUser._id,
+        username: savedUser.username,
+        email: savedUser.email,
+        profilePic: savedUser.profilePic || null,
+        isProfileComplete: savedUser.isProfileComplete,
+      },
     });
 
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  }catch (err) {
+  // 🔴 MongoDB duplicate key error
+  if (err.code === 11000) {
+    if (err.keyValue?.username) {
+      return res.status(409).json({
+        message: "Username must be unique",
+      });
+    }
+
+    if (err.keyValue?.email) {
+      return res.status(409).json({
+        message: "Email already exists",
+      });
+    }
   }
+
+  console.error("REGISTER ERROR:", err);
+  return res.status(500).json({
+    message: "Server error",
+  });
+}
 });
+
 
 // 2. UPLOAD PROFILE PIC (Post-Registration Step)
 router.post(
@@ -83,8 +126,22 @@ router.post(
 // 3. SKIP PROFILE PIC (Optional: If user clicks "Skip")
 router.post('/skip-profile-pic', verifyToken, async (req, res) => {
   try {
-    await User.findByIdAndUpdate(req.user._id, { isProfileComplete: true });
-    res.json({ message: 'Profile setup skipped' });
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { isProfileComplete: true },
+      { new: true }
+    ).select("_id username email profilePic isProfileComplete");
+
+      res.json({
+        success: true,
+        user: {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+          profilePic: user.profilePic,
+          isProfileComplete: user.isProfileComplete
+        }
+      });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -95,25 +152,24 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check email
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'Email or Password wrong' });
+    if (!user) {
+      return res.status(404).json({ message: "Email not registered" });
+    }
 
-    // Check password
     const validPass = await bcrypt.compare(password, user.password);
-    if (!validPass) return res.status(400).json({ message: 'Email or Password wrong' });
+    if (!validPass) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
 
-    // Create token
     const token = jwt.sign(
-      { _id: user._id }, 
+      { _id: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: "8h" }  
+      { expiresIn: "8h" }
     );
 
-    // NOTE: On login, we do NOT force the profile pic page even if it's missing,
-    // per your requirement ("not after logging in").
-    res.header('auth-token', token).json({ 
-      message: 'Logged in successfully', 
+    res.json({
+      message: "Logged in successfully",
       token,
       user: {
         username: user.username,
