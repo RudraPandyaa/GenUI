@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import SettingsModal from './SettingsModal';
 import { authService } from "../services/auth";
 import { FaUser } from 'react-icons/fa';
+import { FiEdit2, FiLogOut } from "react-icons/fi";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
@@ -112,17 +113,54 @@ const Navbar = () => {
                   )}
                 </div>
 
-                {dropdownOpen && (
-                  <div className="absolute right-0 mt-3 w-40 bg-[#09090B] text-white 
-                    rounded-xl shadow-lg border border-gray-800 py-2 z-50">
-                    <button
-                      onClick={authService.logout}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-800 transition"
+                  {dropdownOpen && (
+                    <div
+                      className="
+                        absolute right-0 mt-3 w-48
+                        bg-[#09090B] text-white
+                        rounded-xl shadow-lg
+                        border border-gray-800
+                        py-2 z-50
+                      "
                     >
-                      Logout
-                    </button>
-                  </div>
-                )}
+                      {/* Edit Profile */}
+                      <Link
+                        to="/edit-profile"
+                        onClick={() => setDropdownOpen(false)}
+                        className="
+                          flex items-center gap-3
+                          px-4 py-2
+                          text-sm
+                          hover:bg-gray-800
+                          transition
+                        "
+                      >
+                        <FiEdit2 size={16} className="text-purple-400" />
+                        <span>Edit Profile</span>
+                      </Link>
+
+                      {/* Divider */}
+                      <div className="my-1 border-t border-gray-800" />
+
+                      {/* Logout */}
+                      <button
+                        onClick={authService.logout}
+                        className="
+                          w-full flex items-center gap-3
+                          px-4 py-2
+                          text-sm text-left
+                          text-red-400
+                          hover:bg-gray-800
+                          transition
+                        "
+                      >
+                        <FiLogOut size={16} />
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  )}
+
+
               </div>
           )}
 
