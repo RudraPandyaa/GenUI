@@ -10,6 +10,7 @@ import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { Editor } from "@monaco-editor/react";
 import { useNavigate } from "react-router-dom";
+import ApiKeyModal from "../components/ApiKeyModal";
 
 import Navbar from "../components/Navbar";
 import { authService } from "../services/auth.js";
@@ -33,7 +34,7 @@ const Home = () => {
   const { theme } = useTheme();
   const { settings } = useSettings();
 
-  const API_KEY = import.meta.env.VITE_API_KEY;
+  // const API_KEY = import.meta.env.VITE_API_KEY;
 
   // -------------------- STATE --------------------
   const [outputScreen, setOutputScreen] = useState(false);
@@ -44,6 +45,7 @@ const Home = () => {
   const [framework, setFramework] = useState(FRAMEWORK_OPTIONS[0]);
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
 
   useEffect(() => {
     const profileDone = localStorage.getItem("profileComplete");
@@ -109,7 +111,14 @@ const Home = () => {
 
   const getResponse = async () => {
     if (!prompt.trim()) return toast.error("Please enter a prompt");
-    if (!API_KEY) return toast.error("API Key is missing");
+    const apiKey = localStorage.getItem("GEMINI_API_KEY");
+
+    if (!apiKey) {
+      setShowApiKeyModal(true);
+      return;
+    }
+
+    // if (!API_KEY) return toast.error("API Key is missing");
 
     setLoading(true);
 
@@ -141,7 +150,7 @@ const Home = () => {
       };
 
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -382,6 +391,10 @@ const Home = () => {
           />
         </div>
       )}
+      <ApiKeyModal
+        isOpen={showApiKeyModal}
+        onClose={() => setShowApiKeyModal(false)}
+      />
     </div>
   );
 };

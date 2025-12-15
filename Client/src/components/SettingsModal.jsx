@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IoClose, IoTrashBin, IoRefresh } from 'react-icons/io5';
+import { IoKey, IoTrashBin, IoClose, IoRefresh } from 'react-icons/io5';
 import { FaLaptopCode, FaDatabase, FaInfoCircle } from 'react-icons/fa';
 import { useTheme } from './ThemeContext.jsx';
 import { useSettings } from './SettingsContext.jsx';
@@ -9,11 +9,31 @@ const SettingsModal = ({ isOpen, onClose }) => {
   const { theme, toggleTheme } = useTheme();
   const { settings, updateSetting, resetSettings } = useSettings();
   const [activeTab, setActiveTab] = useState('General');
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
+  const [apiKeyInput, setApiKeyInput] = useState("");
 
   if (!isOpen) return null;
 
   const handleClearCode = () => {
     toast.success("Code history cleared (Simulation)");
+  };
+
+  const handleSaveApiKey = () => {
+    if (!apiKeyInput.trim()) {
+      toast.error("API key cannot be empty");
+      return;
+    }
+
+    localStorage.setItem("GEMINI_API_KEY", apiKeyInput.trim());
+    toast.success("API key updated successfully");
+    setApiKeyInput("");
+    setShowApiKeyInput(false);
+  };
+
+  const handleResetApiKey = () => {
+    localStorage.removeItem("GEMINI_API_KEY");
+    setShowApiKeyInput(true);
+    toast.info("Please enter a new API key");
   };
 
   const tabs = [
@@ -143,6 +163,74 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
             {activeTab === 'Storage' && (
               <div className="space-y-6">
+                {/* Manage API Key */}
+                <div className="p-4 bg-gray-50 dark:bg-[#09090B] rounded-xl border border-gray-200 dark:border-[#222] space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h4 className="text-sm font-medium text-black dark:text-white">
+                        Gemini API Key
+                      </h4>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {localStorage.getItem("GEMINI_API_KEY")
+                          ? "Your API key is saved in this browser."
+                          : "No API key found."}
+                      </p>
+                    </div>
+
+                    {localStorage.getItem("GEMINI_API_KEY") && !showApiKeyInput && (
+                      <button
+                        onClick={handleResetApiKey}
+                        className="text-sm px-3 py-1.5 rounded-lg bg-gray-200 dark:bg-[#222] text-black dark:text-white hover:bg-gray-300 dark:hover:bg-[#333] transition"
+                      >
+                        Update
+                      </button>
+                    )}
+                  </div>
+
+                  {showApiKeyInput && (
+                    <div className="space-y-3">
+                      <input
+                        type="password"
+                        placeholder="Enter new API key"
+                        value={apiKeyInput}
+                        onChange={(e) => setApiKeyInput(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-[#141319] border border-gray-300 dark:border-[#333] focus:outline-none focus:border-purple-500"
+                      />
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleSaveApiKey}
+                          className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 transition"
+                        >
+                          Save
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setShowApiKeyInput(false);
+                            setApiKeyInput("");
+                          }}
+                          className="px-4 py-2 bg-gray-200 dark:bg-[#222] text-black dark:text-white rounded-lg text-sm"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+
+                      <p className="text-xs text-gray-400">
+                        Don’t know how to generate API key?{" "}
+                        <a
+                          href="https://aistudio.google.com/app/apikey"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-purple-400 hover:underline"
+                        >
+                          Click here
+                        </a>
+                      </p>
+                    </div>
+                  )}
+                </div>
+
                 <div className="p-4 bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-900/30 rounded-xl">
                   <h4 className="text-sm font-semibold text-yellow-800 dark:text-yellow-500 mb-1">Warning</h4>
                   <p className="text-xs text-yellow-700 dark:text-yellow-600">
