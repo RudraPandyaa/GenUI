@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
-// const BASE_URL = "https://genui-9lkq.onrender.com/api/auth";
-const BASE_URL = "http://localhost:5000/api/auth";
+const BASE_URL = "https://genui-9lkq.onrender.com/api/auth";
+// const BASE_URL = "http://localhost:5000/api/auth";
 
 export const authService = {
 
