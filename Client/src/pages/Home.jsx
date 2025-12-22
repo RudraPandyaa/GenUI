@@ -307,20 +307,21 @@ const Home = () => {
 
         {/* -------------------------------- RIGHT PANEL ------------------------------- */}
         <div
-          className="
+          className={`
             w-full lg:w-[50%]
             bg-background
             rounded-xl
             mt-5
             border border-border
             shadow-sm
-
-            grid
-            grid-rows-[auto_auto_1fr]
-
-            h-[70vh]        /* 🔥 MOBILE FIX */
-            lg:h-auto
-          "
+            overflow-hidden
+            flex flex-col
+            min-h-0
+            ${outputScreen 
+              ? "grid grid-rows-[auto_auto_1fr] h-[70vh] lg:h-auto" 
+              : "flex items-center justify-center py-20"
+            }
+          `}
         >
 
           {!outputScreen ? (
@@ -373,7 +374,7 @@ const Home = () => {
               </div>
 
               {/* Content */}
-                <div className="overflow-hidden">
+                <div className="flex-1 min-h-0 overflow-hidden">
                 {tab === 1 ? (
                         <Editor
                           height="100%"
