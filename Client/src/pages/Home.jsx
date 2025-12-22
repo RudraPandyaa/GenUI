@@ -11,7 +11,6 @@ import { toast } from "react-toastify";
 import { Editor } from "@monaco-editor/react";
 import { useNavigate } from "react-router-dom";
 import ApiKeyModal from "../components/ApiKeyModal";
-
 import Navbar from "../components/Navbar";
 import { authService } from "../services/auth.js";
 import { useTheme } from "../components/ThemeContext";
@@ -50,8 +49,12 @@ const Home = () => {
   useEffect(() => {
     const profileDone = localStorage.getItem("profileComplete");
 
-    if (profileDone !== "true") {
-      navigate("/setup-profile");
+    if (profileDone !== "true") return;
+
+    const apiKey = localStorage.getItem("GEMINI_API_KEY");
+
+    if (!apiKey) {
+      setShowApiKeyModal(true);
     }
   }, []);
 
@@ -257,7 +260,15 @@ const Home = () => {
     <div className="min-h-screen bg-white dark:bg-[#141319] transition-all duration-300">
       <Navbar />
 
-      <div className={`flex flex-col lg:flex-row gap-[30px] pb-10 ${getContainerClass()}`}>
+      <div
+        className={`
+          flex flex-col lg:flex-row
+          gap-[30px]
+          ${getContainerClass()}
+          min-h-[calc(100vh-90px)]
+        `}
+      >
+
 
         {/* -------------------------------- LEFT PANEL ------------------------------- */}
         <div className="w-full lg:w-[50%] bg-gray-50 dark:bg-[#09090B] border dark:border-[#1f1f23] rounded-xl p-[20px] mt-5 shadow-sm">
@@ -295,7 +306,22 @@ const Home = () => {
         </div>
 
         {/* -------------------------------- RIGHT PANEL ------------------------------- */}
-        <div className="w-full lg:w-[50%] bg-gray-50 dark:bg-[#09090B] rounded-xl mt-5 border dark:border-[#1f1f23] shadow-sm flex flex-col">
+        <div
+          className="
+            w-full lg:w-[50%]
+            bg-background
+            rounded-xl
+            mt-5
+            border border-border
+            shadow-sm
+
+            grid
+            grid-rows-[auto_auto_1fr]
+
+            h-[70vh]        /* 🔥 MOBILE FIX */
+            lg:h-auto
+          "
+        >
 
           {!outputScreen ? (
             <div className="flex flex-col items-center justify-center h-full opacity-60">
@@ -347,28 +373,33 @@ const Home = () => {
               </div>
 
               {/* Content */}
-              <div className="flex-1 overflow-hidden">
+                <div className="overflow-hidden">
                 {tab === 1 ? (
-                  <Editor
-                    height="100%"
-                    theme={theme === "dark" ? "vs-dark" : "light"}
-                    language="html"
-                    value={code}
-                    options={{
-                      minimap: { enabled: false },
-                      fontSize: 14,
-                      fontFamily: settings.font,
-                    }}
-                  />
-                ) : (
-                  <iframe
-                    key={refreshKey}
-                    srcDoc={code}
-                    className="w-full h-full bg-white"
-                    sandbox="allow-scripts"
-                  />
-                )}
-              </div>
+                        <Editor
+                          height="100%"
+                          theme={theme === "dark" ? "vs-dark" : "light"}
+                          language="html"
+                          value={code}
+                          options={{
+                            minimap: { enabled: false },
+                            fontSize: 14,
+                            fontFamily: settings.font,
+                            wordWrap: "on",
+                            scrollBeyondLastLine: false,
+                            automaticLayout: true,
+                          }}
+                        />
+                      ) : (
+                        <iframe
+                          key={refreshKey}
+                          srcDoc={code}
+                          className="w-full h-full bg-white"
+                          sandbox="allow-scripts"
+                        />
+                      )}
+
+                </div>
+
             </>
           )}
         </div>
