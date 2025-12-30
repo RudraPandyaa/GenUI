@@ -77,41 +77,46 @@ const Navbar = () => {
           {!isLoggedIn ? (
             <Link
               to="/login"
-              className="icon cursor-pointer p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-all"
+              className="icon cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-800 transition-all"
             >
               <span className="font-semibold"><FaUser size={18} /></span>
             </Link>
           ) : (
             <div className="relative">
-                <div
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="
-                    w-[55px] h-[53px]
-                    flex items-center justify-center
-                    rounded-lg
-                    icon
-                    cursor-pointer
-                    overflow-hidden
-                    hover:bg-gray-200 dark:hover:bg-gray-800
-                    transition
-                  "
-                  style={{
-                    // padding: "0",
-                    // border: "2px solid #1f2937",
-                    // fontSize: 35px"
-                  }}
-                >
-                  {user?.profilePic ? (
-                    <img
-                      src={user.profilePic}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span className="font-bold text-white text-xl">
-                      {getInitials(user?.username)}
-                    </span>
-                  )}
-                </div>
+              <div
+  onClick={() => setDropdownOpen(!dropdownOpen)}
+  className="
+    w-14 h-14
+    cursor-pointer
+    hover:bg-gray-200 dark:hover:bg-gray-800
+    transition
+    border-2 border-[#1f2937]
+    rounded-[10px]
+    overflow-hidden
+  "
+>
+  {user?.profilePic ? (
+    // Image avatar: full edge-to-edge, no gap, matches container shape exactly
+    <div className="w-full h-full">
+      <img
+        src={user.profilePic}
+        alt="Profile"
+        className="w-full h-full object-cover rounded-[8px]"
+      />
+    </div>
+  ) : (
+    // Initials avatar: intentional inner spacing via smaller centered element
+    <div className="w-full h-full flex items-center justify-center">
+      <div className="w-9 h-9 flex items-center justify-center rounded-[7px]">
+        <span className="font-bold text-white text-lg leading-none">
+          {getInitials(user?.username)}
+        </span>
+      </div>
+    </div>
+  )}
+</div>
+
+
 
                   {dropdownOpen && (
                     <div
