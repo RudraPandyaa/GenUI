@@ -58,7 +58,15 @@ const Home = () => {
     }
   }, []);
 
+  const extractHTMLFromMarkdown = (text) => {
+    if (!text) return "";
 
+    // Remove ```html and ```
+    return text
+      .replace(/```html\s*/i, "")
+      .replace(/```/g, "")
+      .trim();
+  };
 
   // if (userProfileDone === "false") {
   //   navigate("/setup-profile");
@@ -170,7 +178,8 @@ const Home = () => {
 
       if (!responseText) throw new Error("AI returned no content");
 
-      setCode(responseText);
+      const cleanHTML = extractHTMLFromMarkdown(responseText);
+      setCode(cleanHTML);
       setOutputScreen(true);
     } catch (err) {
       console.error(err);
