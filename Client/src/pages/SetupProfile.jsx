@@ -49,7 +49,6 @@ const SetupProfile = () => {
       user.isProfileComplete = true;
 
       localStorage.setItem("user", JSON.stringify(user));
-      toast.success("Profile updated");
       navigate("/");
     } catch (err) {
       toast.error(err.message);
@@ -74,7 +73,6 @@ const SetupProfile = () => {
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("profileComplete", "true");
 
-        toast.success("Profile setup skipped");
         navigate("/");
     } catch (err) {
       toast.error("Something went wrong");
