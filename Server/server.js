@@ -1,8 +1,9 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const authRoutes = require('./controller/userController');
+import express  from 'express'
+import mongoose  from 'mongoose'
+import dotenv  from 'dotenv'
+import cors  from 'cors'
+import userRoutes from './routes/userRoutes.js';
+
 dotenv.config();
 
 
@@ -41,7 +42,7 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch(error => console.error("MongoDB connection error:", error));
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', userRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
