@@ -309,7 +309,7 @@ const Home = () => {
         <div
           className={`
             w-full lg:w-[50%]
-            bg-background
+            dark:bg-[#09090B]
             rounded-xl
             mt-5
             border border-border
