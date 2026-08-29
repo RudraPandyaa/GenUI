@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -19,7 +19,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: ""
   },
-  // This flag helps frontend decide whether to show the "Set Profile Pic" screen
   isProfileComplete: {
     type: Boolean,
     default: false
@@ -34,4 +33,6 @@ const UserSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

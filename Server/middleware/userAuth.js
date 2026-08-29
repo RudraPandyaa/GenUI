@@ -1,6 +1,6 @@
-import jwt from "jsonwebtoken";
-import axios from "axios";
-import dotenv from "dotenv";
+const jwt = require('jsonwebtoken');
+const axios = require('axios');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -43,4 +43,7 @@ const sendOtpEmail = async (to, otp) => {
   return res.data;
 };
 
-export { verifyToken, sendOtpEmail };
+module.exports = {
+  verifyToken,
+  sendOtpEmail,
+};
