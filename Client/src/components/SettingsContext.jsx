@@ -1,8 +1,20 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
-// Default settings
+const validModels = [
+  'gemini-3.8-flash',
+  'gemini-3.6-flash',
+  'gemini-3.5-flash',
+  'gemini-3.5-flash-lite',
+  'gemini-3-flash',
+];
+
 const defaultSettings = {
-  model: 'gemini-2.5-flash',
+  model: 'gemini-3.6-flash',
   font: 'Inter',
   layout: 'Default',
 };
@@ -11,50 +23,58 @@ const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState(() => {
-    const saved = localStorage.getItem('genui-settings');
-    const parsed = saved ? JSON.parse(saved) : defaultSettings;
+    try {
+      const saved = localStorage.getItem('genui-settings');
+      const parsed = saved ? JSON.parse(saved) : defaultSettings;
 
-  // Allowed free-tier models
-  const validModels = [
-    "gemini-2.5-flash",
-    "gemini-2.5-pro",
-    "gemini-2.0-flash",
-    "gemini-flash-latest",
-    "gemini-pro-latest"
-  ];
+      // Automatically replace removed or unsupported saved models
+      if (!validModels.includes(parsed.model)) {
+        return {
+          ...parsed,
+          model: defaultSettings.model,
+        };
+      }
 
-  // If stored model is invalid, fix it automatically
-    if (!validModels.includes(parsed.model)) {
-      parsed.model = 'gemini-2.5-flash';
+      return parsed;
+    } catch {
+      return defaultSettings;
     }
-
-    return parsed;
   });
 
   useEffect(() => {
-    localStorage.setItem('genui-settings', JSON.stringify(settings));
+    localStorage.setItem(
+      'genui-settings',
+      JSON.stringify(settings)
+    );
 
-    // Apply font globally
-    const body = document.body;
-    body.style.fontFamily =
+    document.body.style.fontFamily =
       settings.font === 'Fira Code'
         ? "'Fira Code', monospace"
         : `'${settings.font}', sans-serif`;
   }, [settings]);
 
   const updateSetting = (key, value) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+    setSettings((previousSettings) => ({
+      ...previousSettings,
+      [key]: value,
+    }));
   };
 
   const resetSettings = () => {
-    setSettings(defaultSettings);
     localStorage.removeItem('genui-settings');
-    localStorage.removeItem('theme'); // remove theme if needed
+    localStorage.removeItem('theme');
+    setSettings(defaultSettings);
     window.location.reload();
   };
 
   return (
-    <SettingsContext.Provider value={{ settings, updateSetting, resetSettings }}>
+    <SettingsContext.Provider
+      value={{
+        settings,
+        updateSetting,
+        resetSettings,
+      }}
+    >
       {children}
     </SettingsContext.Provider>
   );
@@ -62,8 +82,12 @@ export const SettingsProvider = ({ children }) => {
 
 export const useSettings = () => {
   const context = useContext(SettingsContext);
+
   if (!context) {
-    throw new Error('useSettings must be used within a SettingsProvider');
+    throw new Error(
+      'useSettings must be used within a SettingsProvider'
+    );
   }
+
   return context;
 };

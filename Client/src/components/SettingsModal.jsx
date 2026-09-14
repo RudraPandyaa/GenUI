@@ -87,19 +87,32 @@ const SettingsModal = ({ isOpen, onClose }) => {
             {activeTab === 'General' && (
               <div className="space-y-6">
 
-                {/* AI Model */}
-                <select
-                  value={settings.model}
-                  onChange={(e) => updateSetting("model", e.target.value)}
-                  className="w-full p-3 rounded-xl bg-gray-50 dark:bg-[#09090B]"
-                >
-                  <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended)</option>
-                  <option value="gemini-2.5-pro">Gemini 2.5 Pro (High Quality)</option>
-                  <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-                  <option value="gemini-flash-latest">Gemini Flash Latest</option>
-                  <option value="gemini-pro-latest">Gemini Pro Latest</option>
-                </select>
+              {/* AI Model */}
+              <select
+  value={settings.model}
+  onChange={(e) => updateSetting("model", e.target.value)}
+  className="w-full p-3 rounded-xl bg-gray-50 dark:bg-[#09090B]"
+>
+  <option value="gemini-3.8-flash">
+    Gemini 3.8 Flash (Latest)
+  </option>
 
+  <option value="gemini-3.6-flash">
+    Gemini 3.6 Flash (Recommended)
+  </option>
+
+  <option value="gemini-3.5-flash">
+    Gemini 3.5 Flash
+  </option>
+
+  <option value="gemini-3.5-flash-lite">
+    Gemini 3.5 Flash Lite (Fast)
+  </option>
+
+  <option value="gemini-3-flash">
+    Gemini 3 Flash
+  </option>
+              </select>
                 
                 {/* <select
                 value={settings.model}
