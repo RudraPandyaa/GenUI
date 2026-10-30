@@ -43,9 +43,12 @@ mongoose.set('strictQuery', false);
 
 // MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('MongoDB connected'))
-    .catch(error => console.error('MongoDB connection error:', error));
-
+  .then(() => {
+    console.log('MongoDB connected');
+    console.log('MongoDB database:', mongoose.connection.name);
+  })
+  .catch(error => console.error('MongoDB connection error:', error));
+  
 // Routes
 app.use('/api/auth', userRoutes);
 
