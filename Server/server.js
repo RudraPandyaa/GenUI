@@ -6,43 +6,59 @@ const userRoutes = require('./routes/userRoutes');
 
 dotenv.config();
 
-
 const app = express();
 
 // Middleware
 app.use(express.json());
 
-// const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://localhost:27017/GenUI";
+// CORS
 app.use(cors({
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      "http://localhost:5173",
-      "https://genn-ui.netlify.app",
-      "https://gen-ui-omega-smoky.vercel.app"
-    ];
+    origin: function (origin, callback) {
+        const allowedOrigins = [
+            'http://localhost:5173',
+            'https://genn-ui.netlify.app',
+            'https://gen-ui-omega-smoky.vercel.app',
+            process.env.CLIENT_URL
+        ].filter(Boolean);
 
-    // allow requests with no origin (like Postman)
-    if (!origin) return callback(null, true);
+        // Allow requests with no origin (Postman, server-to-server, etc.)
+        if (!origin) {
+            return callback(null, true);
+        }
 
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use('/uploads', express.static('uploads'));
+
 mongoose.set('strictQuery', false);
 
+// MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch(error => console.error("MongoDB connection error:", error));
+    .then(() => console.log('MongoDB connected'))
+    .catch(error => console.error('MongoDB connection error:', error));
 
 // Routes
 app.use('/api/auth', userRoutes);
 
+// Health check
+app.get('/', (req, res) => {
+    res.json({
+        success: true,
+        message: 'GenUI Server is running'
+    });
+});
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
