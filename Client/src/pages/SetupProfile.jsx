@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { FiCamera } from "react-icons/fi";
 
-const BASE_URL = "https://genui-9lkq.onrender.com/api/auth";
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/auth`;
 // const BASE_URL = "http://localhost:5000/api/auth";
 const SetupProfile = () => {
   const navigate = useNavigate();

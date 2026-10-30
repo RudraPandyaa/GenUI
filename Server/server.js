@@ -17,7 +17,7 @@ app.use(cors({
         const allowedOrigins = [
             'http://localhost:5173',
             'https://genn-ui.netlify.app',
-            'https://gen-ui-omega-smoky.vercel.app',
+            'https://genui-1-ntbd.onrender.com',
             process.env.CLIENT_URL
         ].filter(Boolean);
 
