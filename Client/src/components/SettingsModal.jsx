@@ -93,25 +93,21 @@ const SettingsModal = ({ isOpen, onClose }) => {
   onChange={(e) => updateSetting("model", e.target.value)}
   className="w-full p-3 rounded-xl bg-gray-50 dark:bg-[#09090B]"
 >
-  <option value="gemini-3.8-flash">
-    Gemini 3.8 Flash (Latest)
-  </option>
+<option value="gemini-3.8-flash">
+  Gemini 3.8 Flash (Latest)
+</option>
 
-  <option value="gemini-3.6-flash">
-    Gemini 3.6 Flash (Recommended)
-  </option>
+<option value="gemini-3.6-flash">
+  Gemini 3.6 Flash (Recommended)
+</option>
 
-  <option value="gemini-3.5-flash">
-    Gemini 3.5 Flash
-  </option>
+<option value="gemini-3.5-flash-lite">
+  Gemini 3.5 Flash Lite (Fast)
+</option>
 
-  <option value="gemini-3.5-flash-lite">
-    Gemini 3.5 Flash Lite (Fast)
-  </option>
-
-  <option value="gemini-3-flash">
-    Gemini 3 Flash
-  </option>
+<option value="gemini-3.1-flash-lite">
+  Gemini 3.1 Flash Lite
+</option>
               </select>
                 
                 {/* <select
