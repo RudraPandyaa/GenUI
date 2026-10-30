@@ -34,7 +34,8 @@ const register = async (req, res) => {
       password: hashedPassword,
       isProfileComplete: false,
     });
-
+    console.log("USER MODEL DATABASE:", User.db.name);
+    console.log("USER COLLECTION:", User.collection.namespace);
     const savedUser = await user.save();
 
     const token = jwt.sign(
